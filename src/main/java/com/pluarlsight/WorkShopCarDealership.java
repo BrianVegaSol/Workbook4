@@ -2,18 +2,23 @@ package com.pluarlsight;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class WorkShopCarDealership {
     public static void main(String[] args) {
-        System.out.println(DealershipFileManager.getDealership().toString());
-        for (Vehicle vehicle : Dealership.inventory) {
-            System.out.println(vehicle.toString());
+        UserInterface.display();
+        if (!UserInterface.exitApp) {
+
+            System.out.println(DealershipFileManager.getDealership().toString());
+            for (Vehicle vehicle : Dealership.inventory) {
+                System.out.println(vehicle.toString());
+            }
+
+
         }
+        UserInterface.scan.close();
+        //close bufferreader
     }
-}
-
-class UserInterface {
-
 }
 
 class DealershipFileManager {
@@ -98,8 +103,24 @@ class Dealership {
         return phone;
     }
 
-    public static ArrayList<Vehicle> getVehiclesByPrice(double min, double max) {
+    /*public static ArrayList<Vehicle> getVehiclesByPrice(double min, double max) {
         return null;
+    }*/
+
+    /*public static void getVehiclesByPrice(double min, double max) {
+        for (Vehicle vehicle : inventory) {
+            System.out.println(vehicle);
+        }
+    }*/
+
+    public ArrayList<Vehicle> getVehiclesByPrice(double min, double max) {
+        ArrayList<Vehicle> filteredVehicles = new ArrayList<>();
+        for (Vehicle vehicle : inventory) {
+            if (vehicle.getPrice() >= min && vehicle.getPrice() <= max) {
+                filteredVehicles.add(vehicle);
+            }
+        }
+        return filteredVehicles;
     }
 
     public static ArrayList<Vehicle> getVehiclesByMakeModel(String make, String model) {
@@ -122,13 +143,20 @@ class Dealership {
         return null;
     }
 
-    public static ArrayList<Vehicle> getAllVehicles(double min, double max) {
+    /*public static ArrayList<Vehicle> getAllVehicles(double min, double max) {
         //Is this necessary or will the return inventory suffice???
         for (Vehicle vehicle : inventory) {
             //inventory.get(vehicle); no
             System.out.println(vehicle);
         }
         return inventory;
+    }*/
+
+    public static void getAllVehicles(double min, double max) {
+        //Is this necessary or will the return inventory suffice???
+        for (int i = 0; i < inventory.size(); i++) {
+            System.out.println(inventory.get(i).toString());
+        }
     }
 
     public static void addVehicle(Vehicle vehicle) {
@@ -139,12 +167,112 @@ class Dealership {
         inventory.remove(vehicle);
     }
 
-    public  String toString() {
+    public String toString() {
         return "Dealership Name: " + name +
                 "\nAddress: " + address +
                 "\nPhone Number: " + phone;
     }
 }
+
+//extend Dealership???
+class UserInterface {
+    static boolean displayMenu = true;
+    static boolean exitApp = false;
+    static Scanner scan = new Scanner(System.in);
+
+    public static void display() {
+        //private init();
+        while (displayMenu) {
+            System.out.println("Welcome to the Display Menu!\n" +
+                    "1) Find vehicles within a price range\n" +
+                    "2) Find vehicles by make/model\n" +
+                    "3) Find vehicles by year\n" +
+                    "4) Find vehicles by color\n" +
+                    "5) Find vehicles by mileage\n" +
+                    "6) Find vehicles by type\n" +
+                    "7) List All vehicles\n" +
+                    "8) Add a vehicle\n" +
+                    "9) Remove a vehicle\n" +
+                    "99) Quit");
+            byte input = scan.nextByte();
+            switch (input) {
+                case 99:
+                    exitApp = true;
+                    displayMenu = false;
+                    break;
+                case 1:
+                    //method
+                    break;
+                case 2:
+                    //method
+                    break;
+                case 3:
+                    //method
+                    break;
+                case 4:
+                    //method
+                    break;
+                case 5:
+                    //method
+                    break;
+                case 6:
+                    //method
+                    break;
+                case 7:
+                    //method
+                    break;
+                case 8:
+                    //method
+                    break;
+                case 9:
+                    //method
+                    break;
+
+
+            }
+        }
+    }
+
+    public static void processVehiclesByPriceRequest(double min, double max) {
+    }
+
+    public static void processVehiclesByMakeModelRequest(String make, String model) {
+
+    }
+
+    public static void processGetVehiclesByYearRequest(String make, String model) {
+
+    }
+
+    public static void processGetVehiclesByColorRequest(String color) {
+
+    }
+
+    public static void processGetVehiclesByMileageRequest(double min, double max) {
+
+    }
+
+    public static void processGetVehiclesByTypeRequest(String vehicleType) {
+
+    }
+
+    public static void processGetAllVehiclesRequest(double min, double max) {
+        //Is this necessary or will the return inventory suffice???
+        /*for (Vehicle vehicle : inventory) {
+            //inventory.get(vehicle); no
+            System.out.println(vehicle);
+        }*/
+    }
+
+    public static void processAddVehicleRequest(Vehicle vehicle) {
+        //inventory.add(vehicle);
+    }
+
+    public static void processRemoveVehicleRequest(Vehicle vehicle) {
+        //inventory.remove(vehicle);
+    }
+}
+
 
 class Vehicle {
     private int VINNumber;
@@ -167,7 +295,72 @@ class Vehicle {
         this.odometer = odometer;
         this.price = price;
     }
-    public String toString () {
+
+    public void setVINNumber(int VINNumber) {
+        this.VINNumber = VINNumber;
+    }
+
+    public int getVINNumber() {
+        return VINNumber;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public void setMake(String make) {
+        this.make = make;
+    }
+
+    public String getMake() {
+        return make;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setVehicleType(String vehicleType) {
+        this.vehicleType = vehicleType;
+    }
+
+    public String getVehicleType() {
+        return vehicleType;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setOdometer(int odometer) {
+        this.odometer = odometer;
+    }
+
+    public int getOdometer() {
+        return odometer;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public String toString() {
         return "----------------------------" +
                 "\nVIN #: " + VINNumber +
                 "\nYear: " + year +
@@ -176,7 +369,7 @@ class Vehicle {
                 "\nVehicle Type: " + vehicleType +
                 "\nColor: " + color +
                 "\nOdometer: " + odometer +
-                String.format("\nPrice: $%,.2f" , price);
+                String.format("\nPrice: $%,.2f", price);
     }
 }
 

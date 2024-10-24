@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 public class WorkShopCarDealership {
     public static void main(String[] args) {
+        DealershipFileManager.getDealership();
         if (!UserInterface.exitApp) {
         UserInterface.display();
 
@@ -108,7 +109,7 @@ class Dealership {
         }
     }*/
 
-    public ArrayList<Vehicle> getVehiclesByPrice(double min, double max) {
+    public static ArrayList<Vehicle> getVehiclesByPrice(double min, double max) {
         ArrayList<Vehicle> filteredVehicles = new ArrayList<>();
         for (Vehicle vehicle : inventory) {
             if (vehicle.getPrice() >= min && vehicle.getPrice() <= max) {
@@ -228,7 +229,11 @@ class UserInterface {
                     displayMenu = false;
                     break;
                 case 1:
-                    //method
+                    System.out.println("What is the minimum price?");
+                    double min = scan.nextDouble();
+                    System.out.println("What is the maximum price?");
+                    double max = scan.nextDouble();
+                    processVehiclesByPriceRequest(min, max);
                     break;
                 case 2:
                     //method
@@ -261,6 +266,10 @@ class UserInterface {
         }
     }
     public static void processVehiclesByPriceRequest(double min, double max) {
+        for (int i = 0; i < Dealership.getVehiclesByPrice(min,max).size(); i++) {
+            System.out.println(Dealership.getVehiclesByPrice(min, max).get(i).toString());
+
+        }
     }
 
     public static void processVehiclesByMakeModelRequest(String make, String model) {

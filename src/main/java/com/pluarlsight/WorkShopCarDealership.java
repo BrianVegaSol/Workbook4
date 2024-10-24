@@ -6,13 +6,8 @@ import java.util.Scanner;
 
 public class WorkShopCarDealership {
     public static void main(String[] args) {
-        UserInterface.display();
         if (!UserInterface.exitApp) {
-
-            System.out.println(DealershipFileManager.getDealership().toString());
-            for (Vehicle vehicle : Dealership.inventory) {
-                System.out.println(vehicle.toString());
-            }
+        UserInterface.display();
 
 
         }
@@ -124,23 +119,48 @@ class Dealership {
     }
 
     public static ArrayList<Vehicle> getVehiclesByMakeModel(String make, String model) {
-        return null;
+        ArrayList<Vehicle> filteredVehicles = new ArrayList<>();
+        for (Vehicle vehicle : inventory) {
+            if (Vehicle.getMake().equalsIgnoreCase(make) && Vehicle.getModel().equalsIgnoreCase(model)) {
+                filteredVehicles.add(vehicle);
+            }
+
+        }
+            return filteredVehicles;
     }
 
     public static ArrayList<Vehicle> getVehiclesByYear(String make, String model) {
         return null;
     }
 
-    public static ArrayList<Vehicle> getVehiclesByColor(String color) {
-        return null;
+    public ArrayList<Vehicle> getVehiclesByColor(String color) {
+        ArrayList<Vehicle> filteredVehicles = new ArrayList<>();
+        for (Vehicle vehicle : inventory) {
+            if (vehicle.getColor().equalsIgnoreCase(color)) {
+                filteredVehicles.add(vehicle);
+            }
+        }
+        return filteredVehicles;
     }
 
     public static ArrayList<Vehicle> getVehiclesByMileage(double min, double max) {
-        return null;
+        ArrayList<Vehicle> filteredVehicles = new ArrayList<>();
+        for (Vehicle vehicle : inventory) {
+            if (vehicle.getOdometer() >= min && vehicle.getOdometer() <= max) {
+                filteredVehicles.add(vehicle);
+            }
+        }
+        return filteredVehicles;
     }
 
     public static ArrayList<Vehicle> getVehiclesByType(String vehicleType) {
-        return null;
+        ArrayList<Vehicle> filteredVehicles = new ArrayList<>();
+        for (Vehicle vehicle : inventory) {
+            if (vehicle.getColor().equalsIgnoreCase(vehicleType)) {
+                filteredVehicles.add(vehicle);
+            }
+        }
+        return filteredVehicles;
     }
 
     /*public static ArrayList<Vehicle> getAllVehicles(double min, double max) {
@@ -149,7 +169,7 @@ class Dealership {
             //inventory.get(vehicle); no
             System.out.println(vehicle);
         }
-        return inventory;
+        return inventory.toString();
     }*/
 
     public static void getAllVehicles(double min, double max) {
@@ -179,9 +199,15 @@ class UserInterface {
     static boolean displayMenu = true;
     static boolean exitApp = false;
     static Scanner scan = new Scanner(System.in);
+    private Dealership dealership;
+//TODO
+    /*private static Dealership init() {
+        DealershipFileManager dealer;
+        return this.dealership = DealershipFileManager.getDealership();
+    }*/
 
     public static void display() {
-        //private init();
+        //init();
         while (displayMenu) {
             System.out.println("Welcome to the Display Menu!\n" +
                     "1) Find vehicles within a price range\n" +
@@ -197,6 +223,7 @@ class UserInterface {
             byte input = scan.nextByte();
             switch (input) {
                 case 99:
+                    System.out.println("Goodbye");
                     exitApp = true;
                     displayMenu = false;
                     break;
@@ -219,7 +246,7 @@ class UserInterface {
                     //method
                     break;
                 case 7:
-                    //method
+                    processGetAllVehiclesRequest();
                     break;
                 case 8:
                     //method
@@ -230,9 +257,9 @@ class UserInterface {
 
 
             }
+
         }
     }
-
     public static void processVehiclesByPriceRequest(double min, double max) {
     }
 
@@ -256,12 +283,16 @@ class UserInterface {
 
     }
 
-    public static void processGetAllVehiclesRequest(double min, double max) {
+    public static void processGetAllVehiclesRequest() {
         //Is this necessary or will the return inventory suffice???
         /*for (Vehicle vehicle : inventory) {
             //inventory.get(vehicle); no
             System.out.println(vehicle);
-        }*/
+        }*/System.out.println(DealershipFileManager.getDealership().toString());
+        for (Vehicle vehicle : Dealership.inventory) {
+            System.out.println(vehicle.toString());
+        }
+
     }
 
     public static void processAddVehicleRequest(Vehicle vehicle) {
@@ -277,8 +308,8 @@ class UserInterface {
 class Vehicle {
     private int VINNumber;
     private int year;
-    private String make;
-    private String model;
+    private static String make;
+    private static String model;
     private String vehicleType;
     private String color;
     private int odometer;
@@ -316,7 +347,7 @@ class Vehicle {
         this.make = make;
     }
 
-    public String getMake() {
+    public static String getMake() {
         return make;
     }
 
@@ -324,7 +355,7 @@ class Vehicle {
         this.model = model;
     }
 
-    public String getModel() {
+    public static String getModel() {
         return model;
     }
 
@@ -361,15 +392,15 @@ class Vehicle {
     }
 
     public String toString() {
-        return "----------------------------" +
-                "\nVIN #: " + VINNumber +
+        return "\nVIN #: " + VINNumber +
                 "\nYear: " + year +
                 "\nMake: " + make +
                 "\nModel: " + model +
                 "\nVehicle Type: " + vehicleType +
                 "\nColor: " + color +
                 "\nOdometer: " + odometer +
-                String.format("\nPrice: $%,.2f", price);
+                String.format("\nPrice: $%,.2f%n", price) +
+                "----------------------------";
     }
 }
 

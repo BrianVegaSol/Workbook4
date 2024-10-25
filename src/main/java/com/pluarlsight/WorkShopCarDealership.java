@@ -195,8 +195,26 @@ class Dealership {
         //inventory.add(vehicle);
     }
 
-    public static void removeVehicle(Vehicle vehicle) {
-        inventory.remove(vehicle);
+    public static void removeVehicle(int vin) {
+        ArrayList<Vehicle> filteredVehicles = new ArrayList<>();
+        for (Vehicle vehicle : inventory) {
+            if (vehicle.getVINNumber() == (vin)) {
+                filteredVehicles.add(vehicle);
+            }
+        }
+        inventory.remove(filteredVehicles);
+
+        if (filteredVehicles.isEmpty()) {
+            System.err.println("No cars with that VIN are on the lot\n");
+        } else {
+            System.out.println("Vehicle Removed Succesfully");
+        }
+        //D & B Used Cars|111 Old Benbrook Rd|817-555-5555
+        //10112|1993|Ford|Explorer|SUV|Red|525123|995.00
+        //37846|2001|Ford|Ranger|truck|Yellow|172544|1995.00
+        //44901|2012|Honda|Civic|SUV|Gray|103221|6995.00
+        //10000|2018|Nissan|Ultima|Car|Black|12000|25000
+        //123456|2000|Make|Model|Car|Teal|1|50000
     }
 
     public String toString() {
@@ -296,8 +314,8 @@ class UserInterface {
                     break;
                 case 9:
                     System.out.println("What is the VIN of the vehicle do you want to remove");
-
-                    //Dealership.removeVehicle();
+                    int vin = scan.nextInt();
+                    Dealership.removeVehicle(vin);
                     break;
 
 

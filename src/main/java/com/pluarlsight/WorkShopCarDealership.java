@@ -7,7 +7,7 @@ import java.util.Scanner;
 public class WorkShopCarDealership {
     public static void main(String[] args) {
         DealershipFileManager.getDealership();
-        System.out.println(Dealership.inventory.toString());
+        //System.out.println(Dealership.inventory.toString());
         if (!UserInterface.exitApp) {
             UserInterface.display();
 
@@ -185,7 +185,7 @@ class Dealership {
     public static void addVehicle() {
         //Vehicle vehicle;
         System.out.println("Please enter you vehicle in the following format\n" +
-                "VIN|Year|Make|Model|Color|Mileage|Price");
+                "VIN|Year|Make|Model|Car Type|Color|Mileage|Price");
         Scanner scanner = new Scanner(System.in);
         String input = scanner.nextLine();
 
@@ -317,7 +317,7 @@ class UserInterface {
     public static void processVehiclesByMakeModelRequest(String make, String model) {
         for (int i = 0; i < Dealership.getVehiclesByMakeModel(make, model).size(); i++) {
             System.out.println(Dealership.getVehiclesByMakeModel(make, model).get(i).toString());
-            Dealership.inventory.clear();
+            //Dealership.inventory.clear();
         }
     }
 
@@ -365,8 +365,8 @@ class UserInterface {
 class Vehicle {
     private int VINNumber;
     private int year;
-    private static String make;
-    private static String model;
+    private String make;
+    private String model;
     private String vehicleType;
     private String color;
     private int odometer;

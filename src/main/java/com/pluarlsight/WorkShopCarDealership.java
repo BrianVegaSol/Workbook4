@@ -157,7 +157,7 @@ class Dealership {
     public static ArrayList<Vehicle> getVehiclesByType(String vehicleType) {
         ArrayList<Vehicle> filteredVehicles = new ArrayList<>();
         for (Vehicle vehicle : inventory) {
-            if (vehicle.getColor().equalsIgnoreCase(vehicleType)) {
+            if (vehicle.getVehicleType().equalsIgnoreCase(vehicleType)) {
                 filteredVehicles.add(vehicle);
             }
         }
@@ -329,7 +329,6 @@ class UserInterface {
         //maybe do try catch OR if () for car not on dealership
         for (int i = 0; i < Dealership.getVehiclesByColor(color).size(); i++) {
             System.out.println(Dealership.getVehiclesByColor(color).get(i).toString());
-            //Dealership.inventory.clear();
         }
     }
 
@@ -340,7 +339,9 @@ class UserInterface {
     }
 
     public static void processGetVehiclesByTypeRequest(String vehicleType) {
-
+        for (int i = 0; i < Dealership.getVehiclesByType(vehicleType).size(); i++) {
+            System.out.println(Dealership.getVehiclesByType(vehicleType).get(i).toString());
+        }
     }
 
     public static void processGetAllVehiclesRequest() {

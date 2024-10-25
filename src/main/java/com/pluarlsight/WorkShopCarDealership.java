@@ -7,8 +7,9 @@ import java.util.Scanner;
 public class WorkShopCarDealership {
     public static void main(String[] args) {
         DealershipFileManager.getDealership();
+        System.out.println(Dealership.inventory.toString());
         if (!UserInterface.exitApp) {
-        UserInterface.display();
+            UserInterface.display();
 
 
         }
@@ -19,11 +20,6 @@ public class WorkShopCarDealership {
 
 class DealershipFileManager {
     public static Dealership getDealership() {
-        /*try(FileWriter writer = new FileWriter("inventory.csv",true)){
-            writer.write("Stuff" + "\n");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }*/
         //read to .csv
         Dealership dealership = null;
         String file = "inventory.csv";
@@ -49,7 +45,7 @@ class DealershipFileManager {
                 Vehicle vehicle = new Vehicle(VINNumber, year, make, model, vehicleType, color, odometer, price);
                 Dealership.inventory.add(vehicle);
             }
-        } catch (IOException e) {
+        } catch (IOException | IndexOutOfBoundsException e) {
             System.err.println("Error reading file: " + e.getMessage());
         }
         return dealership;
@@ -122,16 +118,22 @@ class Dealership {
     public static ArrayList<Vehicle> getVehiclesByMakeModel(String make, String model) {
         ArrayList<Vehicle> filteredVehicles = new ArrayList<>();
         for (Vehicle vehicle : inventory) {
-            if (Vehicle.getMake().equalsIgnoreCase(make) && Vehicle.getModel().equalsIgnoreCase(model)) {
+            if (vehicle.getMake().equalsIgnoreCase(make) && vehicle.getModel().equalsIgnoreCase(model)) {
                 filteredVehicles.add(vehicle);
             }
 
         }
-            return filteredVehicles;
+        return filteredVehicles;
     }
 
-    public static ArrayList<Vehicle> getVehiclesByYear(String make, String model) {
-        return null;
+    public static ArrayList<Vehicle> getVehiclesByYear(int oldYear, int newYear) {
+        ArrayList<Vehicle> filteredVehicles = new ArrayList<>();
+        for (Vehicle vehicle : inventory) {
+            if (vehicle.getYear() >= oldYear && vehicle.getYear() <= newYear) {
+                filteredVehicles.add(vehicle);
+            }
+        }
+        return filteredVehicles;
     }
 
     public ArrayList<Vehicle> getVehiclesByColor(String color) {
@@ -180,8 +182,19 @@ class Dealership {
         }
     }
 
-    public static void addVehicle(Vehicle vehicle) {
-        inventory.add(vehicle);
+    public static void addVehicle() {
+        //Vehicle vehicle;
+        System.out.println("Please enter you vehicle in the following format\n" +
+                "VIN|Year|Make|Model|Color|Mileage|Price");
+        Scanner scanner = new Scanner(System.in);
+        String input = scanner.nextLine();
+
+        try (FileWriter writer = new FileWriter("inventory.csv", true)) {
+            writer.write(input.trim() + "\n");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        //inventory.add(vehicle);
     }
 
     public static void removeVehicle(Vehicle vehicle) {
@@ -200,15 +213,22 @@ class UserInterface {
     static boolean displayMenu = true;
     static boolean exitApp = false;
     static Scanner scan = new Scanner(System.in);
-    private Dealership dealership;
-//TODO
-    /*private static Dealership init() {
+    private static Dealership dealership;
+    // attributes
+    private Room _myroom;
+
+
+    private static Dealership init() {
         DealershipFileManager dealer;
-        return this.dealership = DealershipFileManager.getDealership();
-    }*/
+        Room thisisMyRoom = new Room();
+
+        //_myroom = thisisMyRoom;
+        dealership = DealershipFileManager.getDealership();
+        return dealership;
+    }
 
     public static void display() {
-        //init();
+        init();
         while (displayMenu) {
             System.out.println("Welcome to the Display Menu!\n" +
                     "1) Find vehicles within a price range\n" +
@@ -236,28 +256,50 @@ class UserInterface {
                     processVehiclesByPriceRequest(min, max);
                     break;
                 case 2:
-                    //method
+                    scan.nextLine();
+                    System.out.println("What is the make of the car?");
+                    String make = scan.nextLine();
+                    System.out.println("What is the model of the car?");
+                    String model = scan.nextLine();
+                    processVehiclesByMakeModelRequest(make, model);
                     break;
                 case 3:
-                    //method
+                    System.out.println("What is the oldest year of the car?");
+                    int oldYear = scan.nextInt();
+                    System.out.println("What is the newest year of the car?");
+                    int newYear = scan.nextInt();
+                    processGetVehiclesByYearRequest(oldYear, newYear);
                     break;
                 case 4:
-                    //method
+                    scan.nextLine();
+                    System.out.println("What is the color of the car?");
+                    String color = scan.nextLine();
+                    processGetVehiclesByColorRequest(color);
                     break;
                 case 5:
-                    //method
+                    System.out.println("What is the minimum mileage?");
+                    int minMiles = scan.nextInt();
+                    System.out.println("What is the maximum mileage?");
+                    int maxMiles = scan.nextInt();
+                    processGetVehiclesByMileageRequest(minMiles, maxMiles);
                     break;
                 case 6:
-                    //method
+                    scan.nextLine();
+                    System.out.println("What is the type of the car?");
+                    String type = scan.nextLine();
+                    processGetVehiclesByTypeRequest(type);
                     break;
                 case 7:
                     processGetAllVehiclesRequest();
                     break;
                 case 8:
-                    //method
+                    Dealership.addVehicle();
+                    System.out.println("Vehicle Added Successfully");
                     break;
                 case 9:
-                    //method
+                    System.out.println("What is the VIN of the vehicle do you want to remove");
+
+                    //Dealership.removeVehicle();
                     break;
 
 
@@ -265,23 +307,28 @@ class UserInterface {
 
         }
     }
-    public static void processVehiclesByPriceRequest(double min, double max) {
-        for (int i = 0; i < Dealership.getVehiclesByPrice(min,max).size(); i++) {
-            System.out.println(Dealership.getVehiclesByPrice(min, max).get(i).toString());
 
+    public static void processVehiclesByPriceRequest(double min, double max) {
+        for (int i = 0; i < Dealership.getVehiclesByPrice(min, max).size(); i++) {
+            System.out.println(Dealership.getVehiclesByPrice(min, max).get(i).toString());
         }
     }
 
     public static void processVehiclesByMakeModelRequest(String make, String model) {
-
+        for (int i = 0; i < Dealership.getVehiclesByMakeModel(make, model).size(); i++) {
+            System.out.println(Dealership.getVehiclesByMakeModel(make, model).get(i).toString());
+            Dealership.inventory.clear();
+        }
     }
 
-    public static void processGetVehiclesByYearRequest(String make, String model) {
-
+    public static void processGetVehiclesByYearRequest(int oldYear, int newYear) {
+        for (int i = 0; i < Dealership.getVehiclesByYear(oldYear, newYear).size(); i++) {
+            System.out.println(Dealership.getVehiclesByYear(oldYear, newYear).get(i).toString());
+        }
     }
 
     public static void processGetVehiclesByColorRequest(String color) {
-
+        //maybe do try catch OR if () for car not on dealership
     }
 
     public static void processGetVehiclesByMileageRequest(double min, double max) {
@@ -297,7 +344,8 @@ class UserInterface {
         /*for (Vehicle vehicle : inventory) {
             //inventory.get(vehicle); no
             System.out.println(vehicle);
-        }*/System.out.println(DealershipFileManager.getDealership().toString());
+        }*/
+        System.out.println(DealershipFileManager.getDealership().toString());
         for (Vehicle vehicle : Dealership.inventory) {
             System.out.println(vehicle.toString());
         }
@@ -305,11 +353,11 @@ class UserInterface {
     }
 
     public static void processAddVehicleRequest(Vehicle vehicle) {
-        //inventory.add(vehicle);
+        Dealership.inventory.add(vehicle);
     }
 
     public static void processRemoveVehicleRequest(Vehicle vehicle) {
-        //inventory.remove(vehicle);
+        Dealership.inventory.remove(vehicle);
     }
 }
 
@@ -356,15 +404,11 @@ class Vehicle {
         this.make = make;
     }
 
-    public static String getMake() {
+    public String getMake() {
         return make;
     }
 
-    public void setModel(String model) {
-        this.model = model;
-    }
-
-    public static String getModel() {
+    public String getModel() {
         return model;
     }
 

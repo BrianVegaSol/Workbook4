@@ -334,7 +334,9 @@ class UserInterface {
     }
 
     public static void processGetVehiclesByMileageRequest(double min, double max) {
-
+        for (int i = 0; i < Dealership.getVehiclesByMileage(min, max).size(); i++) {
+            System.out.println(Dealership.getVehiclesByMileage(min, max).get(i).toString());
+        }
     }
 
     public static void processGetVehiclesByTypeRequest(String vehicleType) {

@@ -60,14 +60,12 @@ class Dealership {
     private String name;
     private String address;
     private String phone;
-    //TODO should this be private?
     static ArrayList<Vehicle> inventory;
 
     public Dealership(String name, String address, String phone) {
         this.name = name;
         this.address = address;
         this.phone = phone;
-        //TODO is this instantiating the ArrList object???
         inventory = new ArrayList<>();
     }
 
@@ -136,7 +134,7 @@ class Dealership {
         return filteredVehicles;
     }
 
-    public ArrayList<Vehicle> getVehiclesByColor(String color) {
+    public static ArrayList<Vehicle> getVehiclesByColor(String color) {
         ArrayList<Vehicle> filteredVehicles = new ArrayList<>();
         for (Vehicle vehicle : inventory) {
             if (vehicle.getColor().equalsIgnoreCase(color)) {
@@ -329,6 +327,10 @@ class UserInterface {
 
     public static void processGetVehiclesByColorRequest(String color) {
         //maybe do try catch OR if () for car not on dealership
+        for (int i = 0; i < Dealership.getVehiclesByColor(color).size(); i++) {
+            System.out.println(Dealership.getVehiclesByColor(color).get(i).toString());
+            //Dealership.inventory.clear();
+        }
     }
 
     public static void processGetVehiclesByMileageRequest(double min, double max) {
